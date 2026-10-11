@@ -74,9 +74,12 @@ export default function GameScreen({ gameId }: { gameId: string }) {
       title={finished ? de.game.finished : de.game.round(game.rounds.length + 1)}
       back="/"
       action={
-        <IconButton label={de.game.shareCurrent} onClick={onShare}>
-          <ShareIcon />
-        </IconButton>
+        // A finished game has the large share button in the result banner instead.
+        !finished && (
+          <IconButton label={de.game.shareCurrent} onClick={onShare}>
+            <ShareIcon />
+          </IconButton>
+        )
       }
       footer={
         !finished && (

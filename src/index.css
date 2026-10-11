@@ -1,0 +1,43 @@
+@import 'tailwindcss';
+
+/* Design tokens: neutral, minimal palette with green = good (points down), red = bad (points up). */
+@theme {
+  --color-paper: #fafaf9;
+  --color-surface: #ffffff;
+  --color-surface-2: #f1f1ef;
+  --color-line: #e4e4e0;
+  --color-ink: #18181b;
+  --color-muted: #71717a;
+  --color-good: #059669;
+  --color-bad: #e11d48;
+  --color-accent: #e11d48;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-paper: #0c0c0e;
+    --color-surface: #16161a;
+    --color-surface-2: #222227;
+    --color-line: #2c2c32;
+    --color-ink: #f4f4f5;
+    --color-muted: #a1a1aa;
+    --color-good: #34d399;
+    --color-bad: #fb7185;
+    --color-accent: #fb7185;
+  }
+}
+
+html {
+  color-scheme: light dark;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  @apply bg-paper text-ink antialiased;
+  overscroll-behavior-y: contain;
+}
+
+button {
+  cursor: pointer;
+}

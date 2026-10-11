@@ -25,8 +25,21 @@ export default function HomeScreen() {
   }
 
   return (
-    <Screen title={<span className="text-2xl font-bold tracking-tight">30-Ab</span>}>
-      <p className="-mt-1 mb-6 px-0.5 text-muted">{de.home.subtitle}</p>
+    <Screen
+      title={
+        <span className="flex items-center gap-3 text-3xl font-bold tracking-tight">
+          <img
+            src={`${import.meta.env.BASE_URL}icons/icon-192.png`}
+            alt=""
+            className="size-12 rounded-xl shadow-sm"
+            width={48}
+            height={48}
+          />
+          30-Ab
+        </span>
+      }
+    >
+      <p className="mb-6 px-0.5 text-muted">{de.home.subtitle}</p>
 
       <div className="grid gap-3">
         {running && (

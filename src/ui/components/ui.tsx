@@ -18,7 +18,7 @@ export function Button({
 }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant }) {
   return (
     <button
-      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 font-medium transition
+      className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-4 font-medium transition
         disabled:pointer-events-none disabled:opacity-40 active:scale-[0.98] ${variants[variant]} ${className}`}
       {...props}
     />
@@ -39,6 +39,58 @@ export function Card({ children, className = '', onClick }: { children: ReactNod
   );
 }
 
+/** Square 48px touch target for icon-only actions (back, share, reorder). */
+export function IconButton({
+  label,
+  className = '',
+  children,
+  ...props
+}: ButtonHTMLAttributes<HTMLButtonElement> & { label: string }) {
+  return (
+    <button
+      aria-label={label}
+      title={label}
+      className={`grid size-12 shrink-0 place-items-center rounded-2xl bg-surface-2 text-ink transition hover:bg-line
+        disabled:pointer-events-none disabled:opacity-30 active:scale-95 ${className}`}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+}
+
+const iconProps = {
+  viewBox: '0 0 24 24',
+  className: 'size-6',
+  fill: 'none',
+  stroke: 'currentColor',
+  strokeWidth: 2.25,
+  strokeLinecap: 'round',
+  strokeLinejoin: 'round',
+  'aria-hidden': true,
+} as const;
+
+export const BackIcon = () => (
+  <svg {...iconProps}>
+    <path d="M15 5l-7 7 7 7" />
+  </svg>
+);
+export const ArrowUpIcon = () => (
+  <svg {...iconProps}>
+    <path d="M5 15l7-7 7 7" />
+  </svg>
+);
+export const ArrowDownIcon = () => (
+  <svg {...iconProps}>
+    <path d="M5 9l7 7 7-7" />
+  </svg>
+);
+export const ShareIcon = () => (
+  <svg {...iconProps}>
+    <path d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" />
+  </svg>
+);
+
 /** Page frame with sticky header, optional back button and right-hand action. */
 export function Screen({
   title,
@@ -56,20 +108,18 @@ export function Screen({
   const onBack = typeof back === 'function' ? back : back !== undefined ? () => goBack(back) : undefined;
   return (
     <div className="mx-auto flex min-h-dvh max-w-lg flex-col">
-      <header className="sticky top-0 z-10 flex h-14 items-center gap-2 bg-paper/85 px-2 pt-[env(safe-area-inset-top)] backdrop-blur">
-        {onBack ? (
-          <button onClick={onBack} aria-label="Zurück" className="grid size-11 place-items-center rounded-xl text-xl hover:bg-surface-2">
-            ←
-          </button>
-        ) : (
-          <span className="w-2" />
+      <header className="sticky top-0 z-10 flex min-h-16 items-center gap-3 bg-paper/90 px-4 pt-[env(safe-area-inset-top)] backdrop-blur">
+        {onBack && (
+          <IconButton label="Zurück" onClick={onBack}>
+            <BackIcon />
+          </IconButton>
         )}
-        <h1 className="flex-1 truncate text-lg font-semibold">{title}</h1>
+        <h1 className="min-w-0 flex-1 truncate text-xl font-semibold">{title}</h1>
         {action}
       </header>
-      <main className="flex-1 px-4 pb-6">{children}</main>
+      <main className="flex-1 px-4 pt-2 pb-8">{children}</main>
       {footer && (
-        <footer className="sticky bottom-0 bg-paper/85 px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] backdrop-blur">
+        <footer className="sticky bottom-0 z-10 border-t border-line/60 bg-paper/90 px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] backdrop-blur">
           {footer}
         </footer>
       )}
@@ -95,22 +145,22 @@ export function Stepper({
   max?: number;
   size?: 'lg' | 'md';
 }) {
-  const btn = size === 'lg' ? 'size-16 text-3xl' : 'size-11 text-xl';
+  const btn = size === 'lg' ? 'size-20 text-4xl' : 'size-14 text-2xl';
   return (
     <div className="flex items-center justify-center gap-4">
       <button
-        className={`${btn} grid place-items-center rounded-2xl bg-surface-2 disabled:opacity-30`}
+        className={`${btn} grid place-items-center rounded-2xl bg-surface-2 transition active:scale-95 disabled:opacity-30`}
         onClick={() => onChange(value - 1)}
         disabled={value <= min}
         aria-label="Weniger"
       >
         −
       </button>
-      <span className={`${size === 'lg' ? 'w-20 text-6xl' : 'w-12 text-3xl'} text-center font-semibold tabular-nums`}>
+      <span className={`${size === 'lg' ? 'w-24 text-7xl' : 'w-16 text-4xl'} text-center font-semibold tabular-nums`}>
         {value}
       </span>
       <button
-        className={`${btn} grid place-items-center rounded-2xl bg-surface-2 disabled:opacity-30`}
+        className={`${btn} grid place-items-center rounded-2xl bg-surface-2 transition active:scale-95 disabled:opacity-30`}
         onClick={() => onChange(value + 1)}
         disabled={value >= max}
         aria-label="Mehr"
@@ -133,7 +183,7 @@ export function Sheet({ open, onClose, title, children }: { open: boolean; onClo
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 sm:items-center" onClick={onClose}>
       <div
-        className="w-full max-w-lg rounded-t-3xl bg-paper p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-xl sm:rounded-3xl"
+        className="max-h-[92dvh] w-full max-w-lg overflow-y-auto rounded-t-3xl bg-paper p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-xl sm:rounded-3xl"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-label={title}
@@ -141,6 +191,19 @@ export function Sheet({ open, onClose, title, children }: { open: boolean; onClo
         <h2 className="mb-4 text-lg font-semibold">{title}</h2>
         {children}
       </div>
+    </div>
+  );
+}
+
+/**
+ * Standard sheet action layout: the main action full-width on top, secondary actions below,
+ * so nothing is cut off on narrow screens. Children should use className="w-full".
+ */
+export function SheetActions({ primary, children }: { primary: ReactNode; children?: ReactNode }) {
+  return (
+    <div className="mt-5 grid gap-2">
+      {primary}
+      {children && <div className="grid auto-cols-fr grid-flow-col gap-2">{children}</div>}
     </div>
   );
 }
@@ -154,19 +217,11 @@ export function useToast(): [ReactNode, (msg: string) => void] {
     return () => clearTimeout(t);
   }, [msg]);
   const node = msg ? (
-    <div className="fixed inset-x-0 bottom-24 z-50 flex justify-center px-4">
+    <div className="fixed inset-x-0 bottom-28 z-50 flex justify-center px-4">
       <div className="rounded-full bg-ink px-4 py-2 text-sm text-paper shadow-lg">{msg}</div>
     </div>
   ) : null;
   return [node, setMsg];
-}
-
-export function ShareIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" />
-    </svg>
-  );
 }
 
 export function DeltaBadge({ delta, className = '' }: { delta: number; className?: string }) {

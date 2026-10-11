@@ -5,7 +5,7 @@ import { de } from '../../i18n/de';
 import { navigate, replaceRoute } from '../../router';
 import { newId } from '../../storage/repository';
 import { useStore } from '../../store';
-import { Button, Screen, SectionTitle, Stepper } from '../components/ui';
+import { ArrowDownIcon, ArrowUpIcon, Button, IconButton, Screen, SectionTitle, Stepper } from '../components/ui';
 
 const DEFAULT_START_SCORE = 30;
 
@@ -71,7 +71,7 @@ export default function NewGameScreen() {
               key={p.id}
               onClick={() => toggle(p.id)}
               disabled={!on && selected.length >= MAX_PLAYERS}
-              className={`min-h-11 rounded-full border px-4 transition disabled:opacity-40 ${
+              className={`min-h-12 rounded-full border px-5 text-base transition disabled:opacity-40 ${
                 on ? 'border-ink bg-ink text-paper' : 'border-line bg-surface'
               }`}
             >
@@ -87,21 +87,15 @@ export default function NewGameScreen() {
           <p className="mb-2 text-sm text-muted">{de.newGame.seatHint}</p>
           <ol className="grid gap-2">
             {selected.map((id, i) => (
-              <li key={id} className="flex items-center gap-3 rounded-2xl border border-line bg-surface p-2 pl-4">
-                <span className="w-5 text-muted tabular-nums">{i + 1}.</span>
-                <span className="flex-1 font-medium">{playerName(id)}</span>
-                <Button variant="ghost" className="px-3" disabled={i === 0} onClick={() => move(i, -1)} aria-label="Nach oben">
-                  ↑
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="px-3"
-                  disabled={i === selected.length - 1}
-                  onClick={() => move(i, 1)}
-                  aria-label="Nach unten"
-                >
-                  ↓
-                </Button>
+              <li key={id} className="flex items-center gap-2 rounded-2xl border border-line bg-surface p-2 pl-4">
+                <span className="w-6 text-muted tabular-nums">{i + 1}.</span>
+                <span className="min-w-0 flex-1 truncate text-lg font-medium">{playerName(id)}</span>
+                <IconButton label="Nach oben" disabled={i === 0} onClick={() => move(i, -1)}>
+                  <ArrowUpIcon />
+                </IconButton>
+                <IconButton label="Nach unten" disabled={i === selected.length - 1} onClick={() => move(i, 1)}>
+                  <ArrowDownIcon />
+                </IconButton>
               </li>
             ))}
           </ol>

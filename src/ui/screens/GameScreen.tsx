@@ -5,7 +5,19 @@ import { de, formatScore, suitSymbol } from '../../i18n/de';
 import { navigate, replaceRoute } from '../../router';
 import { buildShareText, shareText, whatsappUrl } from '../../share/shareResult';
 import { useStore } from '../../store';
-import { Button, Card, DeltaBadge, Screen, SectionTitle, Sheet, ShareIcon, Stepper, useToast } from '../components/ui';
+import {
+  Button,
+  Card,
+  DeltaBadge,
+  IconButton,
+  Screen,
+  SectionTitle,
+  Sheet,
+  SheetActions,
+  ShareIcon,
+  Stepper,
+  useToast,
+} from '../components/ui';
 
 export default function GameScreen({ gameId }: { gameId: string }) {
   const { data, updateGame, update, playerName } = useStore();
@@ -62,9 +74,9 @@ export default function GameScreen({ gameId }: { gameId: string }) {
       title={finished ? de.game.finished : de.game.round(game.rounds.length + 1)}
       back="/"
       action={
-        <Button variant="ghost" className="px-3" onClick={onShare} aria-label={de.game.shareCurrent}>
+        <IconButton label={de.game.shareCurrent} onClick={onShare}>
           <ShareIcon />
-        </Button>
+        </IconButton>
       }
       footer={
         !finished && (
@@ -81,7 +93,7 @@ export default function GameScreen({ gameId }: { gameId: string }) {
           <div className="mt-4 grid grid-cols-2 gap-2">
             <button
               onClick={onShare}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-paper/15 px-4 font-medium text-paper"
+              className="inline-flex min-h-14 items-center justify-center gap-2 rounded-xl bg-paper/15 px-4 text-lg font-medium text-paper active:scale-[0.98]"
             >
               <ShareIcon /> {de.game.share}
             </button>
@@ -89,7 +101,7 @@ export default function GameScreen({ gameId }: { gameId: string }) {
               href={whatsappUrl(shareContent())}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[#25D366] px-4 font-medium text-white"
+              className="inline-flex min-h-14 items-center justify-center rounded-xl bg-[#25D366] px-4 text-lg font-medium text-white active:scale-[0.98]"
             >
               {de.game.whatsapp}
             </a>
@@ -253,25 +265,29 @@ function CorrectionSheet({
         value={note}
         onChange={(e) => setNote(e.target.value)}
         placeholder={de.game.note}
-        className="mt-4 min-h-11 w-full rounded-xl border border-line bg-surface px-4 outline-none focus:border-ink"
+        className="mt-4 min-h-12 w-full rounded-xl border border-line bg-surface px-4 text-base outline-none focus:border-ink"
         maxLength={60}
       />
-      <div className="mt-4 flex justify-end gap-2">
-        <Button variant="ghost" onClick={close}>
+      <SheetActions
+        primary={
+          <Button
+            variant="primary"
+            className="h-14 w-full text-lg"
+            disabled={delta === 0}
+            onClick={() => {
+              if (!playerId) return;
+              onSave({ playerId, delta, note: note.trim() || undefined, afterRound, createdAt: Date.now() });
+              close();
+            }}
+          >
+            {de.game.save}
+          </Button>
+        }
+      >
+        <Button className="w-full" onClick={close}>
           {de.game.cancel}
         </Button>
-        <Button
-          variant="primary"
-          disabled={delta === 0}
-          onClick={() => {
-            if (!playerId) return;
-            onSave({ playerId, delta, note: note.trim() || undefined, afterRound, createdAt: Date.now() });
-            close();
-          }}
-        >
-          {de.game.save}
-        </Button>
-      </div>
+      </SheetActions>
     </Sheet>
   );
 }

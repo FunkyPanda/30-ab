@@ -104,7 +104,7 @@ export const de = {
     sumError: (sum: number) => `Summe der Stiche ist ${sum} – es müssen genau 5 sein.`,
     overrideHint: 'Tippe auf eine Punktänderung, um sie manuell anzupassen.',
     overridePrompt: (name: string) => `Punktänderung für ${name}`,
-    reset: 'Berechnung',
+    resetTo: (delta: string) => `Zurück auf ${delta}`,
     next: 'Weiter',
     back: 'Zurück',
     save: 'Runde speichern',

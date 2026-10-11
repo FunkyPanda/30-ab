@@ -3,7 +3,7 @@ import type { Player } from '../../domain/types';
 import { de } from '../../i18n/de';
 import { newId } from '../../storage/repository';
 import { useStore } from '../../store';
-import { Button, Card, Screen, Sheet } from '../components/ui';
+import { Button, Card, Screen, Sheet, SheetActions } from '../components/ui';
 
 export default function PlayersScreen() {
   const { activePlayers, data, update } = useStore();
@@ -55,10 +55,10 @@ export default function PlayersScreen() {
             setError('');
           }}
           placeholder={de.players.placeholder}
-          className="min-h-11 flex-1 rounded-xl border border-line bg-surface px-4 outline-none focus:border-ink"
+          className="min-h-12 min-w-0 flex-1 rounded-xl border border-line bg-surface px-4 text-base outline-none focus:border-ink"
           maxLength={24}
         />
-        <Button variant="primary" type="submit" disabled={!name.trim()}>
+        <Button variant="primary" type="submit" className="shrink-0 px-5" disabled={!name.trim()}>
           {de.players.add}
         </Button>
       </form>
@@ -88,22 +88,29 @@ export default function PlayersScreen() {
         <input
           value={editName}
           onChange={(e) => setEditName(e.target.value)}
-          className="mb-4 min-h-11 w-full rounded-xl border border-line bg-surface px-4 outline-none focus:border-ink"
+          className="min-h-12 w-full rounded-xl border border-line bg-surface px-4 text-base outline-none focus:border-ink"
           maxLength={24}
           autoFocus
         />
-        <div className="flex gap-2">
-          <Button variant="danger" onClick={() => editing && remove(editing)}>
-            {de.players.remove}
-          </Button>
-          <span className="flex-1" />
-          <Button variant="ghost" onClick={() => setEditing(null)}>
+        <SheetActions
+          primary={
+            <Button
+              variant="primary"
+              className="h-14 w-full text-lg"
+              onClick={saveRename}
+              disabled={!editName.trim() || nameTaken(editName, editing?.id)}
+            >
+              {de.game.save}
+            </Button>
+          }
+        >
+          <Button className="w-full" onClick={() => setEditing(null)}>
             {de.game.cancel}
           </Button>
-          <Button variant="primary" onClick={saveRename} disabled={!editName.trim() || nameTaken(editName, editing?.id)}>
-            {de.game.save}
+          <Button variant="danger" className="w-full" onClick={() => editing && remove(editing)}>
+            {de.players.remove}
           </Button>
-        </div>
+        </SheetActions>
       </Sheet>
     </Screen>
   );

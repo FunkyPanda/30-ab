@@ -5,7 +5,7 @@ import type { Game, Round, RoundEntry, Suit } from '../../domain/types';
 import { de, formatDelta, formatScore, SUITS, suitSymbol } from '../../i18n/de';
 import { goBack } from '../../router';
 import { useStore } from '../../store';
-import { Button, DeltaBadge, Screen, Sheet, Stepper } from '../components/ui';
+import { Button, DeltaBadge, Screen, Sheet, SheetActions, Stepper } from '../components/ui';
 
 type Step = { kind: 'bid' } | { kind: 'sitOut' } | { kind: 'tricks'; playerId: string } | { kind: 'summary' };
 
@@ -134,14 +134,14 @@ function Wizard({
       back={back}
       action={
         existing && (
-          <Button variant="danger" className="px-3" onClick={deleteRound}>
+          <Button variant="danger" className="shrink-0 px-3" onClick={deleteRound}>
             {de.game.delete}
           </Button>
         )
       }
       footer={
-        <div className="flex gap-2">
-          <Button variant="ghost" onClick={back}>
+        <div className="flex gap-3">
+          <Button className="h-14 px-5 text-base" onClick={back}>
             {currentIndex === 0 ? de.wizard.cancel : de.wizard.back}
           </Button>
           <Button variant="primary" className="h-14 flex-1 text-lg" disabled={nextDisabled} onClick={isLast ? save : next}>
@@ -387,21 +387,27 @@ function OverrideSheet({
   return (
     <Sheet open={!!playerId} onClose={close} title={de.wizard.overridePrompt(name)}>
       <Stepper value={current} onChange={setDraft} min={-99} max={99} />
-      <div className="mt-6 flex gap-2">
-        <Button variant="ghost" onClick={() => setDraft(calculated)} disabled={current === calculated}>
-          ↺ {de.wizard.reset} ({formatDelta(calculated)})
+      <SheetActions
+        primary={
+          <Button
+            variant="primary"
+            className="h-14 w-full text-lg"
+            onClick={() => {
+              if (playerId) onSave(playerId, current);
+              setDraft(null);
+            }}
+          >
+            {de.game.save}
+          </Button>
+        }
+      >
+        <Button className="w-full" onClick={() => setDraft(calculated)} disabled={current === calculated}>
+          {de.wizard.resetTo(formatDelta(calculated))}
         </Button>
-        <span className="flex-1" />
-        <Button
-          variant="primary"
-          onClick={() => {
-            if (playerId) onSave(playerId, current);
-            setDraft(null);
-          }}
-        >
-          {de.game.save}
+        <Button className="w-full" onClick={close}>
+          {de.game.cancel}
         </Button>
-      </div>
+      </SheetActions>
     </Sheet>
   );
 }

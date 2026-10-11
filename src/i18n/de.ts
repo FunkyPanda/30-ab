@@ -64,7 +64,6 @@ export const de = {
     shareCurrent: 'Spielstand teilen',
     copied: 'In die Zwischenablage kopiert.',
     shareFailed: 'Teilen nicht möglich.',
-    whatsapp: 'WhatsApp',
     endGame: 'Spiel beenden',
     endGameConfirm: 'Spiel jetzt beenden? Es gewinnt, wer die wenigsten Punkte hat.',
     reopen: 'Weiterspielen',

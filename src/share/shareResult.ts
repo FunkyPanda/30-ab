@@ -44,7 +44,3 @@ export async function shareText(text: string): Promise<ShareOutcome> {
     return 'failed';
   }
 }
-
-export function whatsappUrl(text: string): string {
-  return `https://wa.me/?text=${encodeURIComponent(text)}`;
-}

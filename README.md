@@ -44,7 +44,7 @@ Stack: Vite, React, TypeScript, Tailwind CSS, vite-plugin-pwa. No backend; data 
 ```
 src/domain/     pure game logic (scoring, rules, stats) + tests
 src/storage/    localStorage persistence, JSON export/import
-src/share/      share text, Web Share API / clipboard / WhatsApp link
+src/share/      share text, Web Share API with clipboard fallback
 src/i18n/de.ts  all German UI strings
 src/ui/         screens and shared components
 ```

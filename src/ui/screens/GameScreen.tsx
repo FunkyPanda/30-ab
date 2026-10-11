@@ -3,7 +3,7 @@ import { currentScores, syncStatus, winners } from '../../domain/scoring';
 import type { Correction, Game } from '../../domain/types';
 import { de, formatScore, suitSymbol } from '../../i18n/de';
 import { navigate, replaceRoute } from '../../router';
-import { buildShareText, shareText, whatsappUrl } from '../../share/shareResult';
+import { buildShareText, shareText } from '../../share/shareResult';
 import { useStore } from '../../store';
 import {
   Button,
@@ -90,22 +90,12 @@ export default function GameScreen({ gameId }: { gameId: string }) {
         <div className="mb-4 rounded-2xl bg-ink p-5 text-paper">
           <p className="text-sm opacity-70">{de.game.finished}</p>
           <p className="mt-1 text-2xl font-bold">🏆 {winnerIds.map(playerName).join(' & ')}</p>
-          <div className="mt-4 grid grid-cols-2 gap-2">
-            <button
-              onClick={onShare}
-              className="inline-flex min-h-14 items-center justify-center gap-2 rounded-xl bg-paper/15 px-4 text-lg font-medium text-paper active:scale-[0.98]"
-            >
-              <ShareIcon /> {de.game.share}
-            </button>
-            <a
-              href={whatsappUrl(shareContent())}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex min-h-14 items-center justify-center rounded-xl bg-[#25D366] px-4 text-lg font-medium text-white active:scale-[0.98]"
-            >
-              {de.game.whatsapp}
-            </a>
-          </div>
+          <button
+            onClick={onShare}
+            className="mt-4 inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-xl bg-paper/15 px-4 text-lg font-medium text-paper active:scale-[0.98]"
+          >
+            <ShareIcon /> {de.game.share}
+          </button>
         </div>
       )}
 

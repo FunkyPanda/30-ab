@@ -28,13 +28,83 @@ export function saveData(data: AppData): void {
   }
 }
 
-/** Parses and minimally validates exported/stored JSON. Throws on invalid input. */
+const SUITS = ['kreuz', 'pik', 'herz', 'karo'];
+const MAX_TEXT_LENGTH = 200;
+
+const isObj = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v);
+const isStr = (v: unknown): v is string => typeof v === 'string' && v.length <= MAX_TEXT_LENGTH;
+const isNum = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v);
+const isStrArray = (v: unknown): v is string[] => Array.isArray(v) && v.every(isStr);
+
+function validPlayer(p: unknown): p is Player {
+  return isObj(p) && isStr(p.id) && isStr(p.name) && isNum(p.createdAt);
+}
+
+function validEntry(e: unknown): boolean {
+  return (
+    isObj(e) &&
+    isStr(e.playerId) &&
+    typeof e.sittingOut === 'boolean' &&
+    isNum(e.tricks) &&
+    isNum(e.calculatedDelta) &&
+    isNum(e.delta)
+  );
+}
+
+function validRound(r: unknown): boolean {
+  return (
+    isObj(r) &&
+    isStr(r.declarerId) &&
+    isNum(r.bid) &&
+    SUITS.includes(r.trump as string) &&
+    Array.isArray(r.entries) &&
+    r.entries.every(validEntry)
+  );
+}
+
+function validCorrection(c: unknown): boolean {
+  return (
+    isObj(c) &&
+    isStr(c.playerId) &&
+    isNum(c.delta) &&
+    isNum(c.afterRound) &&
+    isNum(c.createdAt) &&
+    (c.note === undefined || isStr(c.note))
+  );
+}
+
+function validGame(g: unknown): g is Game {
+  return (
+    isObj(g) &&
+    isStr(g.id) &&
+    isStrArray(g.playerIds) &&
+    g.playerIds.length >= 2 &&
+    g.playerIds.length <= 4 &&
+    isNum(g.startScore) &&
+    (g.status === 'running' || g.status === 'finished') &&
+    isNum(g.createdAt) &&
+    Array.isArray(g.rounds) &&
+    g.rounds.every(validRound) &&
+    Array.isArray(g.corrections) &&
+    g.corrections.every(validCorrection)
+  );
+}
+
+/** Parses and strictly validates exported/stored JSON. Throws on invalid input. */
 export function parseData(raw: string): AppData {
-  const parsed = JSON.parse(raw);
-  if (!parsed || parsed.version !== 1 || !Array.isArray(parsed.players) || !Array.isArray(parsed.games)) {
+  const parsed: unknown = JSON.parse(raw);
+  if (
+    !isObj(parsed) ||
+    parsed.version !== 1 ||
+    !Array.isArray(parsed.players) ||
+    !Array.isArray(parsed.games) ||
+    !parsed.players.every(validPlayer) ||
+    !parsed.games.every(validGame)
+  ) {
     throw new Error('Invalid data format');
   }
-  return parsed as AppData;
+  // Rebuild from the validated fields only, so unknown extra keys in a file are dropped.
+  return { version: 1, players: parsed.players as Player[], games: parsed.games as Game[] };
 }
 
 /** Triggers a download of all data as a JSON backup file. */

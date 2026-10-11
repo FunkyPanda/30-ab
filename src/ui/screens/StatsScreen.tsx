@@ -1,6 +1,8 @@
 import { computeStats, type PlayerStats } from '../../domain/stats';
 import { de, formatScore } from '../../i18n/de';
 import { useStore } from '../../store';
+import { emojiOf } from '../../domain/avatar';
+import { Avatar } from '../components/Avatar';
 import { Card, Screen } from '../components/ui';
 
 const percent = (v: number) => `${Math.round(v * 100)} %`;
@@ -24,8 +26,9 @@ export default function StatsScreen() {
         <div className="grid gap-3">
           {stats.map(({ player, stats }, i) => (
             <Card key={player.id}>
-              <div className="mb-3 flex items-baseline justify-between">
-                <p className="text-lg font-semibold">
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <p className="flex min-w-0 items-center gap-3 text-lg font-semibold">
+                  <Avatar emoji={emojiOf(player)} size="md" />
                   {i === 0 && stats.gamesWon > 0 && '🏆 '}
                   {player.name}
                 </p>

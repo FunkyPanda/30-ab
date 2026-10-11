@@ -41,6 +41,12 @@ describe('parseData', () => {
     const badCorrection = { playerId: 'p1', delta: 'x', afterRound: 0, createdAt: 0 };
     expect(() => parseData(JSON.stringify({ ...valid, games: [{ ...game, corrections: [badCorrection] }] }))).toThrow();
   });
+  it('accepts players with and without an avatar emoji but rejects a wrong type', () => {
+    const withEmoji = { ...valid, players: [{ ...player, emoji: '🦊' }] };
+    expect(parseData(JSON.stringify(withEmoji)).players[0].emoji).toBe('🦊');
+    expect(parseData(JSON.stringify(valid)).players[0].emoji).toBeUndefined();
+    expect(() => parseData(JSON.stringify({ ...valid, players: [{ ...player, emoji: 5 }] }))).toThrow();
+  });
   it('drops unknown top-level keys', () => {
     expect(Object.keys(parseData(JSON.stringify({ ...valid, extra: 1 })))).toEqual(['version', 'players', 'games']);
   });

@@ -1,3 +1,4 @@
+import { emojiOf } from '../domain/avatar';
 import { currentScores, ranking, winners } from '../domain/scoring';
 import type { Game, Player } from '../domain/types';
 import { formatScore } from '../i18n/de';
@@ -5,7 +6,10 @@ import { formatScore } from '../i18n/de';
 /** Builds a German, chat-friendly summary of the game. */
 export function buildShareText(game: Game, players: Player[]): string {
   const scores = currentScores(game);
-  const name = (id: string) => players.find((p) => p.id === id)?.name ?? '?';
+  const name = (id: string) => {
+    const player = players.find((p) => p.id === id);
+    return player ? `${emojiOf(player)} ${player.name}` : '?';
+  };
   const date = new Date(game.finishedAt ?? Date.now()).toLocaleDateString('de-DE');
   const title = game.status === 'finished' ? 'Endstand' : 'Zwischenstand';
   const medals = ['🥇', '🥈', '🥉'];

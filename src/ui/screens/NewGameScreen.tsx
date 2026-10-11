@@ -5,6 +5,8 @@ import { de } from '../../i18n/de';
 import { navigate, replaceRoute } from '../../router';
 import { newId } from '../../storage/repository';
 import { useStore } from '../../store';
+import { emojiOf } from '../../domain/avatar';
+import { Avatar, PlayerAvatar } from '../components/Avatar';
 import { ArrowDownIcon, ArrowUpIcon, Button, IconButton, Screen, SectionTitle, Stepper } from '../components/ui';
 
 const DEFAULT_START_SCORE = 30;
@@ -71,10 +73,11 @@ export default function NewGameScreen() {
               key={p.id}
               onClick={() => toggle(p.id)}
               disabled={!on && selected.length >= MAX_PLAYERS}
-              className={`min-h-12 rounded-full border px-5 text-base transition disabled:opacity-40 ${
+              className={`flex min-h-12 items-center gap-2 rounded-full border pr-5 pl-2 text-base transition disabled:opacity-40 ${
                 on ? 'border-ink bg-ink text-paper' : 'border-line bg-surface'
               }`}
             >
+              <Avatar emoji={emojiOf(p)} size="sm" />
               {p.name}
             </button>
           );
@@ -89,6 +92,7 @@ export default function NewGameScreen() {
             {selected.map((id, i) => (
               <li key={id} className="flex items-center gap-2 rounded-2xl border border-line bg-surface p-2 pl-4">
                 <span className="w-6 text-muted tabular-nums">{i + 1}.</span>
+                <PlayerAvatar id={id} size="md" />
                 <span className="min-w-0 flex-1 truncate text-lg font-medium">{playerName(id)}</span>
                 <IconButton label="Nach oben" disabled={i === 0} onClick={() => move(i, -1)}>
                   <ArrowUpIcon />

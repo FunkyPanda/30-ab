@@ -37,7 +37,7 @@ const isNum = (v: unknown): v is number => typeof v === 'number' && Number.isFin
 const isStrArray = (v: unknown): v is string[] => Array.isArray(v) && v.every(isStr);
 
 function validPlayer(p: unknown): p is Player {
-  return isObj(p) && isStr(p.id) && isStr(p.name) && isNum(p.createdAt);
+  return isObj(p) && isStr(p.id) && isStr(p.name) && isNum(p.createdAt) && (p.emoji === undefined || isStr(p.emoji));
 }
 
 function validEntry(e: unknown): boolean {

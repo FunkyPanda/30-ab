@@ -5,6 +5,7 @@ import type { Game, Round, RoundEntry, Suit } from '../../domain/types';
 import { de, formatDelta, formatScore, SUITS, suitSymbol } from '../../i18n/de';
 import { goBack } from '../../router';
 import { useStore } from '../../store';
+import { PlayerAvatar } from '../components/Avatar';
 import { Button, DeltaBadge, Screen, Sheet, SheetActions, Stepper } from '../components/ui';
 
 type Step = { kind: 'bid' } | { kind: 'sitOut' } | { kind: 'tricks'; playerId: string } | { kind: 'summary' };
@@ -166,11 +167,12 @@ function Wizard({
                 <button
                   key={id}
                   onClick={() => chooseDeclarer(id)}
-                  className={`min-h-14 rounded-2xl border px-3 font-medium transition ${
+                  className={`flex min-h-16 items-center gap-2 rounded-2xl border px-2 text-left font-medium transition ${
                     declarerId === id ? 'border-ink bg-ink text-paper' : 'border-line bg-surface'
                   }`}
                 >
-                  {playerName(id)}
+                  <PlayerAvatar id={id} size="md" />
+                  <span className="min-w-0 truncate">{playerName(id)}</span>
                 </button>
               ))}
             </div>
@@ -233,7 +235,10 @@ function Wizard({
                     out ? 'border-dashed border-muted bg-surface-2' : 'border-line bg-surface'
                   }`}
                 >
-                  <span className={`font-medium ${out ? 'text-muted line-through' : ''}`}>{playerName(id)}</span>
+                  <span className="flex min-w-0 items-center gap-3">
+                    <PlayerAvatar id={id} size="md" />
+                    <span className={`truncate font-medium ${out ? 'text-muted line-through' : ''}`}>{playerName(id)}</span>
+                  </span>
                   <span className="text-sm text-muted">{reason ? de.wizard.blocked[reason] : out ? de.wizard.sitsOut : de.wizard.plays}</span>
                 </button>
               );
@@ -244,6 +249,7 @@ function Wizard({
 
       {step.kind === 'tricks' && (
         <TricksStep
+          playerId={step.playerId}
           name={playerName(step.playerId)}
           isDeclarer={step.playerId === declarerId}
           bid={bid}
@@ -289,6 +295,7 @@ function Wizard({
 }
 
 function TricksStep(props: {
+  playerId: string;
   name: string;
   isDeclarer: boolean;
   bid: number;
@@ -299,10 +306,11 @@ function TricksStep(props: {
   herz: boolean;
   onChange: (v: number) => void;
 }) {
-  const { name, isDeclarer, bid, value, max, remaining, delta, herz, onChange } = props;
+  const { playerId, name, isDeclarer, bid, value, max, remaining, delta, herz, onChange } = props;
   return (
     <section className="flex flex-col items-center pt-4 text-center">
-      <p className="text-3xl font-bold">{name}</p>
+      <PlayerAvatar id={playerId} size="xl" />
+      <p className="mt-3 text-3xl font-bold">{name}</p>
       {isDeclarer && <p className="mt-1 text-sm text-muted">{de.wizard.declarerBid(bid)}</p>}
       <h2 className="mt-6 mb-6 text-muted">{de.wizard.tricksFor(name)}</h2>
       <Stepper value={value} onChange={onChange} min={0} max={Math.min(TRICKS_PER_ROUND, max)} />
@@ -339,7 +347,8 @@ function Summary({
       {sum !== TRICKS_PER_ROUND && <p className="mb-4 rounded-xl bg-bad/10 p-3 text-sm text-bad">{de.wizard.sumError(sum)}</p>}
       <div className="grid gap-2">
         {entries.map((e) => (
-          <div key={e.playerId} className="flex items-center gap-3 rounded-2xl border border-line bg-surface p-4">
+          <div key={e.playerId} className="flex items-center gap-3 rounded-2xl border border-line bg-surface p-3">
+            <PlayerAvatar id={e.playerId} size="md" />
             <div className="min-w-0 flex-1">
               <p className="truncate font-medium">
                 {playerName(e.playerId)}

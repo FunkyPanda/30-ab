@@ -3,6 +3,8 @@ export type Suit = 'kreuz' | 'pik' | 'herz' | 'karo';
 export interface Player {
   id: string;
   name: string;
+  /** Avatar emoji; unique among active players. Missing on players created before avatars existed. */
+  emoji?: string;
   createdAt: number;
   archived?: boolean;
 }

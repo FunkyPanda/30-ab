@@ -5,6 +5,7 @@ import { de, formatScore, suitSymbol } from '../../i18n/de';
 import { navigate, replaceRoute } from '../../router';
 import { buildShareText, shareText } from '../../share/shareResult';
 import { useStore } from '../../store';
+import { PlayerAvatar } from '../components/Avatar';
 import {
   Button,
   Card,
@@ -20,7 +21,7 @@ import {
 } from '../components/ui';
 
 export default function GameScreen({ gameId }: { gameId: string }) {
-  const { data, updateGame, update, playerName } = useStore();
+  const { data, updateGame, update, playerName, playerLabel } = useStore();
   const [toast, showToast] = useToast();
   const [correcting, setCorrecting] = useState<string | null>(null);
   const game = data.games.find((g) => g.id === gameId);
@@ -92,7 +93,7 @@ export default function GameScreen({ gameId }: { gameId: string }) {
       {finished && (
         <div className="mb-4 rounded-2xl bg-ink p-5 text-paper">
           <p className="text-sm opacity-70">{de.game.finished}</p>
-          <p className="mt-1 text-2xl font-bold">🏆 {winnerIds.map(playerName).join(' & ')}</p>
+          <p className="mt-1 text-2xl font-bold">🏆 {winnerIds.map(playerLabel).join(' & ')}</p>
           <button
             onClick={onShare}
             className="mt-4 inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-xl bg-paper/15 px-4 text-lg font-medium text-paper active:scale-[0.98]"
@@ -112,6 +113,7 @@ export default function GameScreen({ gameId }: { gameId: string }) {
               onClick={() => setCorrecting(id)}
               className={`flex items-center gap-3 ${leading ? 'border-ink' : ''}`}
             >
+              <PlayerAvatar id={id} size="lg" />
               <div className="min-w-0 flex-1">
                 <p className="truncate font-medium">
                   {leading && <span className="mr-1">{finished ? '🏆' : '👑'}</span>}
@@ -137,7 +139,7 @@ export default function GameScreen({ gameId }: { gameId: string }) {
       {game.rounds.length === 0 && game.corrections.length === 0 ? (
         <p className="py-4 text-center text-muted">{de.game.noRounds}</p>
       ) : (
-        <div className="grid gap-2">{historyItems(game, playerName, removeCorrection)}</div>
+        <div className="grid gap-2">{historyItems(game, playerLabel, removeCorrection)}</div>
       )}
 
       <div className="mt-8 grid gap-2">
@@ -158,7 +160,7 @@ export default function GameScreen({ gameId }: { gameId: string }) {
 
       <CorrectionSheet
         playerId={correcting}
-        name={correcting ? playerName(correcting) : ''}
+        name={correcting ? playerLabel(correcting) : ''}
         current={correcting ? scores[correcting] : 0}
         afterRound={game.rounds.length}
         onClose={() => setCorrecting(null)}

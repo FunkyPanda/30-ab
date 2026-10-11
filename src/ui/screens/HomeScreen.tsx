@@ -7,7 +7,7 @@ import { useStore } from '../../store';
 import { Button, Card, Screen, SectionTitle, useToast } from '../components/ui';
 
 export default function HomeScreen() {
-  const { data, update, playerName } = useStore();
+  const { data, update, playerLabel } = useStore();
   const [toast, showToast] = useToast();
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -81,7 +81,7 @@ export default function HomeScreen() {
                   {ranking(scores).map((id, i) => (
                     <span key={id} className={i === 0 && g.status === 'finished' ? 'font-semibold' : ''}>
                       {i === 0 && g.status === 'finished' && '🏆 '}
-                      {playerName(id)} <span className="text-muted tabular-nums">{formatScore(scores[id])}</span>
+                      {playerLabel(id)} <span className="text-muted tabular-nums">{formatScore(scores[id])}</span>
                     </span>
                   ))}
                 </div>

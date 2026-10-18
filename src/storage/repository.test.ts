@@ -48,6 +48,11 @@ describe('parseData', () => {
     expect(() => parseData(JSON.stringify({ ...valid, players: [{ ...player, emoji: 5 }] }))).toThrow();
   });
   it('drops unknown top-level keys', () => {
-    expect(Object.keys(parseData(JSON.stringify({ ...valid, extra: 1 })))).toEqual(['version', 'players', 'games']);
+    expect(Object.keys(parseData(JSON.stringify({ ...valid, extra: 1 })))).toEqual(['version', 'players', 'games', 'settings']);
+  });
+  it('fills in default settings and keeps valid ones', () => {
+    expect(parseData(JSON.stringify(valid)).settings).toEqual({ sitOutMinScore: 7 });
+    expect(parseData(JSON.stringify({ ...valid, settings: { sitOutMinScore: 10 } })).settings).toEqual({ sitOutMinScore: 10 });
+    expect(parseData(JSON.stringify({ ...valid, settings: { sitOutMinScore: -3 } })).settings).toEqual({ sitOutMinScore: 7 });
   });
 });

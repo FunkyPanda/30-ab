@@ -36,7 +36,7 @@ function Wizard({
   editIndex?: number;
   onSave: (game: Game) => void;
 }) {
-  const { playerName } = useStore();
+  const { data, playerName } = useStore();
   const roundIndex = editIndex ?? game.rounds.length;
 
   const [declarerId, setDeclarerId] = useState<string | null>(existing?.declarerId ?? null);
@@ -56,7 +56,7 @@ function Wizard({
 
   const blockReason = (playerId: string) =>
     declarerId && trump
-      ? sitOutBlockReason({ game, playerId, declarerId, trump, currentlyOut: sittingOut, roundIndex })
+      ? sitOutBlockReason({ game, playerId, declarerId, trump, currentlyOut: sittingOut, roundIndex, sitOutMinScore: data.settings.sitOutMinScore })
       : 'declarer';
   const canAnyoneSitOut = declarerId !== null && game.playerIds.some((id) => sittingOut.includes(id) || !blockReason(id));
   const order = declarerId ? playOrder(game.playerIds, declarerId, sittingOut) : [];
@@ -221,7 +221,7 @@ function Wizard({
       {step.kind === 'sitOut' && (
         <section>
           <h2 className="mb-1 font-medium">{de.wizard.sitOutQuestion}</h2>
-          <p className="mb-4 text-sm text-muted">{de.wizard.sitOutHint}</p>
+          <p className="mb-4 text-sm text-muted">{de.wizard.sitOutHint(data.settings.sitOutMinScore)}</p>
           <div className="grid gap-2">
             {game.playerIds.map((id) => {
               const out = sittingOut.includes(id);
@@ -239,7 +239,7 @@ function Wizard({
                     <PlayerAvatar id={id} size="md" />
                     <span className={`truncate font-medium ${out ? 'text-muted line-through' : ''}`}>{playerName(id)}</span>
                   </span>
-                  <span className="text-sm text-muted">{reason ? de.wizard.blocked[reason] : out ? de.wizard.sitsOut : de.wizard.plays}</span>
+                  <span className="text-sm text-muted">{reason === 'lowScore' ? de.wizard.blockedLowScore(data.settings.sitOutMinScore) : reason ? de.wizard.blocked[reason] : out ? de.wizard.sitsOut : de.wizard.plays}</span>
                 </button>
               );
             })}

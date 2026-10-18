@@ -25,6 +25,7 @@ auf der Startseite lassen sich die Daten sichern oder auf ein anderes Handy übe
 | Trump Herz | all of the above ×2 |
 
 - Trump Kreuz: nobody may sit out. Max. 2 players sit out per round, max. 2 rounds in a row; the declarer always plays.
+  Players below 7 points must play (limit adjustable under „Einstellungen“, 0 turns the rule off).
 - Start score is configurable (default 30). The game ends when someone reaches ≤ 0; lowest score wins.
 - Each round is entered as declarer, bid, trump, sit-outs, then tricks per player (the app checks the sum is 5).
   Computed deltas can be overridden; scores can be corrected at any time; past rounds can be edited or deleted.

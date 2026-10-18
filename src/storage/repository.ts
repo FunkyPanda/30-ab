@@ -1,4 +1,5 @@
-import type { Game, Player } from '../domain/types';
+import { DEFAULT_SETTINGS } from '../domain/rules';
+import type { Game, Player, Settings } from '../domain/types';
 
 const STORAGE_KEY = '30ab:v1';
 
@@ -6,9 +7,10 @@ export interface AppData {
   version: 1;
   players: Player[];
   games: Game[];
+  settings: Settings;
 }
 
-const empty = (): AppData => ({ version: 1, players: [], games: [] });
+const empty = (): AppData => ({ version: 1, players: [], games: [], settings: { ...DEFAULT_SETTINGS } });
 
 export function loadData(): AppData {
   try {
@@ -38,6 +40,13 @@ const isStrArray = (v: unknown): v is string[] => Array.isArray(v) && v.every(is
 
 function validPlayer(p: unknown): p is Player {
   return isObj(p) && isStr(p.id) && isStr(p.name) && isNum(p.createdAt) && (p.emoji === undefined || isStr(p.emoji));
+}
+
+/** Settings are optional (older data has none); unknown or invalid values fall back to the defaults. */
+function parseSettings(s: unknown): Settings {
+  const settings = { ...DEFAULT_SETTINGS };
+  if (isObj(s) && isNum(s.sitOutMinScore) && s.sitOutMinScore >= 0) settings.sitOutMinScore = Math.round(s.sitOutMinScore);
+  return settings;
 }
 
 function validEntry(e: unknown): boolean {
@@ -104,7 +113,12 @@ export function parseData(raw: string): AppData {
     throw new Error('Invalid data format');
   }
   // Rebuild from the validated fields only, so unknown extra keys in a file are dropped.
-  return { version: 1, players: parsed.players as Player[], games: parsed.games as Game[] };
+  return {
+    version: 1,
+    players: parsed.players as Player[],
+    games: parsed.games as Game[],
+    settings: parseSettings(parsed.settings),
+  };
 }
 
 /** Triggers a download of all data as a JSON backup file. */
@@ -118,14 +132,21 @@ export function exportData(data: AppData): void {
   URL.revokeObjectURL(url);
 }
 
-/** Merges imported data into existing data; entries with the same id are replaced by the imported version. */
+/**
+ * Merges imported data into existing data; entries with the same id are replaced by the imported version.
+ * The settings of this device are kept.
+ */
 export function mergeData(current: AppData, imported: AppData): AppData {
   const byId = <T extends { id: string }>(a: T[], b: T[]) => {
     const map = new Map(a.map((x) => [x.id, x]));
     for (const x of b) map.set(x.id, x);
     return [...map.values()];
   };
-  return { version: 1, players: byId(current.players, imported.players), games: byId(current.games, imported.games) };
+  return {
+    ...current,
+    players: byId(current.players, imported.players),
+    games: byId(current.games, imported.games),
+  };
 }
 
 export function newId(): string {

@@ -53,6 +53,9 @@ export default function HomeScreen() {
         <div className="grid grid-cols-2 gap-3">
           <Button onClick={() => navigate('/players')}>👥 {de.home.players}</Button>
           <Button onClick={() => navigate('/stats')}>📊 {de.home.stats}</Button>
+          <Button className="col-span-2" onClick={() => navigate('/settings')}>
+            ⚙️ {de.home.settings}
+          </Button>
         </div>
       </div>
 

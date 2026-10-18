@@ -1,10 +1,12 @@
-import { TRICKS_PER_ROUND } from './scoring';
-import type { Game, RoundEntry, Suit } from './types';
+import { currentScores, TRICKS_PER_ROUND } from './scoring';
+import type { Game, RoundEntry, Settings, Suit } from './types';
 
 export const MIN_PLAYERS = 2;
 export const MAX_PLAYERS = 4;
 export const MAX_SIT_OUTS_PER_ROUND = 2;
 export const MAX_CONSECUTIVE_SIT_OUTS = 2;
+export const DEFAULT_SIT_OUT_MIN_SCORE = 7;
+export const DEFAULT_SETTINGS: Settings = { sitOutMinScore: DEFAULT_SIT_OUT_MIN_SCORE };
 
 /** How many of the most recent rounds the player sat out in a row. */
 export function consecutiveSitOuts(game: Game, playerId: string, beforeRound = game.rounds.length): number {
@@ -17,7 +19,7 @@ export function consecutiveSitOuts(game: Game, playerId: string, beforeRound = g
   return count;
 }
 
-export type SitOutBlockReason = 'declarer' | 'kreuz' | 'limitReached' | 'consecutive' | 'tooFewPlayers';
+export type SitOutBlockReason = 'declarer' | 'kreuz' | 'limitReached' | 'consecutive' | 'lowScore' | 'tooFewPlayers';
 
 /** Returns why a player may not sit out, or null if allowed. */
 export function sitOutBlockReason(params: {
@@ -27,11 +29,14 @@ export function sitOutBlockReason(params: {
   trump: Suit;
   currentlyOut: string[];
   roundIndex: number;
+  /** Players below this score (before the round) must play. */
+  sitOutMinScore: number;
 }): SitOutBlockReason | null {
-  const { game, playerId, declarerId, trump, currentlyOut, roundIndex } = params;
+  const { game, playerId, declarerId, trump, currentlyOut, roundIndex, sitOutMinScore } = params;
   if (playerId === declarerId) return 'declarer';
   if (trump === 'kreuz') return 'kreuz';
   if (consecutiveSitOuts(game, playerId, roundIndex) >= MAX_CONSECUTIVE_SIT_OUTS) return 'consecutive';
+  if (currentScores(game, roundIndex)[playerId] < sitOutMinScore) return 'lowScore';
   if (currentlyOut.includes(playerId)) return null;
   if (currentlyOut.length >= MAX_SIT_OUTS_PER_ROUND) return 'limitReached';
   // Need at least two active players for a trick game.

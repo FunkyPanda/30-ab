@@ -12,6 +12,7 @@
 - Es können pro Rund bis zu 2 Spieler sagen, dass sie nicht in der Runde mitspielen möchten. Das geht aber nur 2 mal hintereinander, danach muss der Spieler mindestens
 einmal wieder mitspielen
 - Wird die Farbe KREUZ angesagt, muss jeder Spieler mitspielen
+- Ist ein Spieler unter 7 Punkten, darf er nicht mehr aussetzen. Kommt er wieder auf 7 Punkte oder mehr, darf er wieder aussetzen. Das Limit ist in den Einstellungen der App anpassbar
 - Macht ein Spieler keinen Stich in einer Runde wird ihm automatisch 5 Punkte auf sein Punktekonto hinzugezählt
 - Der Spieler, der anfängt und somit die Trumpffarbe ansagt wird folgendermaßen gezählt: wenn er z.B. 3 Stiche ansagt und 3 macht, geht er 6 Punkte runter. 
 Sagt er 4 Stiche an und macht 5, geht er 9 Punkte runter. Macht er weniger Stiche als angesagt, muss er die Anzahl der angesagten Stiche + 5 Punkte hoch (z.B. 3 angesagt → 8 Punkte hoch).

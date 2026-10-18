@@ -35,6 +35,11 @@ export interface Correction {
   createdAt: number;
 }
 
+export interface Settings {
+  /** Players whose score is below this value may not sit out (0 = rule off). */
+  sitOutMinScore: number;
+}
+
 export type GameStatus = 'running' | 'finished';
 
 export interface Game {

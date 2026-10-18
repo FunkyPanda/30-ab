@@ -4,6 +4,7 @@ import HomeScreen from './ui/screens/HomeScreen';
 import NewGameScreen from './ui/screens/NewGameScreen';
 import PlayersScreen from './ui/screens/PlayersScreen';
 import RoundWizard from './ui/screens/RoundWizard';
+import SettingsScreen from './ui/screens/SettingsScreen';
 import StatsScreen from './ui/screens/StatsScreen';
 
 /**
@@ -15,6 +16,7 @@ import StatsScreen from './ui/screens/StatsScreen';
  *   #/game/:id/round           new round
  *   #/game/:id/round/:index    edit round
  *   #/stats                    statistics
+ *   #/settings                 settings
  */
 export default function App() {
   const [page, id, sub, index] = useHashRoute();
@@ -25,6 +27,8 @@ export default function App() {
       return <NewGameScreen />;
     case 'stats':
       return <StatsScreen />;
+    case 'settings':
+      return <SettingsScreen />;
     case 'game':
       if (id && sub === 'round') {
         return <RoundWizard key={`${id}-${index ?? 'new'}`} gameId={id} editIndex={index !== undefined ? Number(index) : undefined} />;

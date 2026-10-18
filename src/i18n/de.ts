@@ -1,3 +1,4 @@
+import type { SitOutBlockReason } from '../domain/rules';
 import type { Suit } from '../domain/types';
 
 /** All user-facing German strings. */
@@ -8,6 +9,7 @@ export const de = {
     continueGame: 'Spiel fortsetzen',
     players: 'Spieler',
     stats: 'Statistik',
+    settings: 'Einstellungen',
     savedGames: 'Gespeicherte Spiele',
     noGames: 'Noch keine Spiele. Leg zuerst Spieler an und starte ein neues Spiel.',
     running: 'läuft',
@@ -89,7 +91,8 @@ export const de = {
     herzHint: 'Herz: alle Punkte zählen doppelt!',
     kreuzHint: 'Kreuz: alle Spieler müssen mitspielen.',
     sitOutQuestion: 'Wer setzt diese Runde aus?',
-    sitOutHint: 'Maximal 2 Spieler pro Runde, höchstens 2-mal hintereinander.',
+    sitOutHint: (minScore: number) =>
+      `Maximal 2 Spieler pro Runde, höchstens 2-mal hintereinander.${minScore > 0 ? ` Wer unter ${minScore} Punkten ist, muss mitspielen.` : ''}`,
     plays: 'spielt mit',
     sitsOut: 'setzt aus',
     blocked: {
@@ -98,7 +101,8 @@ export const de = {
       limitReached: 'Max. 2 setzen aus',
       tooFewPlayers: 'Mind. 2 müssen spielen',
       consecutive: 'Hat schon 2-mal ausgesetzt',
-    },
+    } satisfies Record<Exclude<SitOutBlockReason, 'lowScore'>, string>,
+    blockedLowScore: (minScore: number) => `Unter ${minScore} Punkten`,
     tricksFor: (name: string) => `Wie viele Stiche hat ${name} gemacht?`,
     declarerBid: (bid: number) => `Ansager · ${bid} angesagt`,
     remaining: (n: number) => (n === 1 ? 'Noch 1 Stich offen' : `Noch ${n} Stiche offen`),
@@ -111,6 +115,15 @@ export const de = {
     back: 'Zurück',
     save: 'Runde speichern',
     cancel: 'Abbrechen',
+  },
+  settings: {
+    title: 'Einstellungen',
+    sitOutMinScore: 'Aussetzen erst ab',
+    sitOutMinScoreHint: (n: number) =>
+      n > 0
+        ? `Wer unter ${n} Punkten ist, darf nicht mehr aussetzen. Kommt er wieder auf ${n} oder mehr, darf er wieder.`
+        : 'Aus: Aussetzen ist unabhängig vom Punktestand erlaubt.',
+    reset: (n: number) => `Zurücksetzen auf ${n}`,
   },
   stats: {
     title: 'Statistik',

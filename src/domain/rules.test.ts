@@ -28,6 +28,7 @@ const params = (g: Game, playerId: string, currentlyOut: string[] = [], trump: '
   trump,
   currentlyOut,
   roundIndex: g.rounds.length,
+  sitOutMinScore: 7,
 });
 
 describe('sit-out rules', () => {
@@ -50,6 +51,13 @@ describe('sit-out rules', () => {
   it('max two players sit out per round', () => {
     expect(sitOutBlockReason(params(game([]), 'd', ['b', 'c']))).toBe('limitReached');
     expect(sitOutBlockReason(params(game([]), 'c', ['b', 'c']))).toBeNull();
+  });
+  it('players below the minimum score must play', () => {
+    const low: Game = { ...game([]), corrections: [{ playerId: 'b', delta: -24, afterRound: 0, createdAt: 0 }] };
+    expect(sitOutBlockReason(params(low, 'b'))).toBe('lowScore');
+    expect(sitOutBlockReason({ ...params(low, 'b'), sitOutMinScore: 6 })).toBeNull();
+    expect(sitOutBlockReason({ ...params(low, 'b'), sitOutMinScore: 0 })).toBeNull();
+    expect(sitOutBlockReason(params(low, 'c'))).toBeNull();
   });
   it('keeps at least two active players', () => {
     const three: Game = { ...game([]), playerIds: ['a', 'b', 'c'] };

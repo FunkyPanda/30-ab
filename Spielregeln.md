@@ -12,9 +12,9 @@
 - Es können pro Rund bis zu 2 Spieler sagen, dass sie nicht in der Runde mitspielen möchten. Das geht aber nur 2 mal hintereinander, danach muss der Spieler mindestens
 einmal wieder mitspielen
 - Wird die Farbe KREUZ angesagt, muss jeder Spieler mitspielen
-- Macht ein Spieler keinen Stich in einer Runde wird ihm automatisch 4 Punkte auf sein Punktekonto hinzugezählt
+- Macht ein Spieler keinen Stich in einer Runde wird ihm automatisch 5 Punkte auf sein Punktekonto hinzugezählt
 - Der Spieler, der anfängt und somit die Trumpffarbe ansagt wird folgendermaßen gezählt: wenn er z.B. 3 Stiche ansagt und 3 macht, geht er 6 Punkte runter. 
-Sagt er 4 Stiche an und macht 5, geht er 9 Punkte runter. Macht er weniger Stiche als angesagt, muss er 7 Punkte hoch.
+Sagt er 4 Stiche an und macht 5, geht er 9 Punkte runter. Macht er weniger Stiche als angesagt, muss er die Anzahl der angesagten Stiche + 5 Punkte hoch (z.B. 3 angesagt → 8 Punkte hoch).
 - Sonderregel: wird die Farbe HERZ angesagt zählen alle PUnkte in der Runde doppelt
 
 

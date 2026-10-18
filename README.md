@@ -18,9 +18,9 @@ auf der Startseite lassen sich die Daten sichern oder auf ein anderes Handy übe
 | Situation | Points |
 |---|---|
 | Declarer makes ≥ bid | −(bid + tricks), e.g. 3/3 → −6, 4/5 → −9 |
-| Declarer makes < bid | +7 |
+| Declarer makes < bid | +(bid + 5), e.g. 3 bid → +8 |
 | Other player, n ≥ 1 tricks | −n |
-| Other player, 0 tricks | +4 |
+| Other player, 0 tricks | +5 |
 | Sitting out | ±0 |
 | Trump Herz | all of the above ×2 |
 

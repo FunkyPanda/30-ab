@@ -11,15 +11,15 @@ describe('calcDelta', () => {
   it('declarer overachieves: 4/5 -> -9', () => {
     expect(calcDelta({ ...base, isDeclarer: true, bid: 4, tricks: 5 })).toBe(-9);
   });
-  it('declarer fails -> +7', () => {
-    expect(calcDelta({ ...base, isDeclarer: true, bid: 3, tricks: 2 })).toBe(7);
+  it('declarer fails -> +(bid + 5)', () => {
+    expect(calcDelta({ ...base, isDeclarer: true, bid: 3, tricks: 2 })).toBe(8);
     expect(calcDelta({ ...base, isDeclarer: true, bid: 2, tricks: 0 })).toBe(7);
   });
   it('other player: -1 per trick', () => {
     expect(calcDelta({ ...base, isDeclarer: false, bid: 3, tricks: 2 })).toBe(-2);
   });
-  it('other player with zero tricks -> +4', () => {
-    expect(calcDelta({ ...base, isDeclarer: false, bid: 3, tricks: 0 })).toBe(4);
+  it('other player with zero tricks -> +5', () => {
+    expect(calcDelta({ ...base, isDeclarer: false, bid: 3, tricks: 0 })).toBe(5);
   });
   it('sitting out -> 0', () => {
     expect(calcDelta({ ...base, sittingOut: true, isDeclarer: false, bid: 3, tricks: 0 })).toBe(0);
@@ -27,8 +27,8 @@ describe('calcDelta', () => {
   it('herz doubles everything', () => {
     const herz = { ...base, trump: 'herz' as const };
     expect(calcDelta({ ...herz, isDeclarer: true, bid: 3, tricks: 3 })).toBe(-12);
-    expect(calcDelta({ ...herz, isDeclarer: true, bid: 3, tricks: 1 })).toBe(14);
-    expect(calcDelta({ ...herz, isDeclarer: false, bid: 3, tricks: 0 })).toBe(8);
+    expect(calcDelta({ ...herz, isDeclarer: true, bid: 3, tricks: 1 })).toBe(16);
+    expect(calcDelta({ ...herz, isDeclarer: false, bid: 3, tricks: 0 })).toBe(10);
     expect(calcDelta({ ...herz, isDeclarer: false, bid: 3, tricks: 2 })).toBe(-4);
   });
 });

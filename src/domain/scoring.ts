@@ -2,8 +2,9 @@ import type { Game, Round, RoundEntry, Suit } from './types';
 
 export const TRICKS_PER_ROUND = 5;
 export const MAX_BID = TRICKS_PER_ROUND;
-export const ZERO_TRICKS_PENALTY = 4;
-export const DECLARER_FAIL_PENALTY = 7;
+export const ZERO_TRICKS_PENALTY = 5;
+/** Added to the bid when the declarer misses it. */
+export const DECLARER_FAIL_PENALTY = 5;
 
 export function multiplierFor(trump: Suit): number {
   return trump === 'herz' ? 2 : 1;
@@ -20,15 +21,15 @@ export interface DeltaInput {
 /**
  * Score change for one player in one round (negative = good, the goal is to reach 0).
  * - Sitting out: 0
- * - Declarer: made >= bid -> -(bid + tricks), otherwise +7
- * - Others: 0 tricks -> +4, otherwise -1 per trick
+ * - Declarer: made >= bid -> -(bid + tricks), otherwise +(bid + 5)
+ * - Others: 0 tricks -> +5, otherwise -1 per trick
  * - Herz as trump doubles everything.
  */
 export function calcDelta({ isDeclarer, sittingOut, tricks, bid, trump }: DeltaInput): number {
   if (sittingOut) return 0;
   let base: number;
   if (isDeclarer) {
-    base = tricks >= bid ? -(bid + tricks) : DECLARER_FAIL_PENALTY;
+    base = tricks >= bid ? -(bid + tricks) : bid + DECLARER_FAIL_PENALTY;
   } else {
     base = tricks === 0 ? ZERO_TRICKS_PENALTY : -tricks;
   }
